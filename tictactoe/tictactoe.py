@@ -22,7 +22,16 @@ def player(board):
     """
     Returns player who has the next turn on a board.
     """
-    raise NotImplementedError
+    count_x = 0
+    count_o = 0
+    for row in board:
+        for cell in row:
+            if cell == X:
+                count_x += 1
+            else if cell == O:
+                count_o += 1
+
+    return X if count_x == count_o else O
 
 
 def actions(board):
