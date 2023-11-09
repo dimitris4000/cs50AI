@@ -132,20 +132,20 @@ def minimax(board):
     if player(board) == X:
         optimum_action = [-2, None]
         for action in possible_actions:
-            action_value = minmax_value(result(board,action))
+            action_value = min_value(result(board,action))
             if optimum_action[0] < action_value[0]:
                 optimum_action = [action_value[0], action]
     else:
         optimum_action = [2, None]
         for action in possible_actions:
-            action_value = minmax_value(result(board,action))
+            action_value = max_value(result(board,action))
             if optimum_action[0] > action_value[1]:
                 optimum_action = [action_value[1], action]
 
     return optimum_action[1]
 
 
-def minmax_value(board):
+def min_value(board):
     """
     Returns a list with two values of the form [min_value, max_value] of
     the given board.
@@ -161,6 +161,29 @@ def minmax_value(board):
         children_boards = [result(board,action) for action in actions(board)]
         res = [
             min(minmax_value(board)[1] for board in children_boards),
+            None,
+        ]
+
+    minmax_memoize[hash] = res
+    return res
+
+
+def max_value(board):
+    """
+    Returns a list with two values of the form [min_value, max_value] of
+    the given board.
+    """
+    hash = encode_board(board)
+    if hash in minmax_memoize:
+        return minmax_memoize[hash]
+
+    if terminal(board):
+        res = utility(board)
+        res = [res,res]
+    else:
+        children_boards = [result(board,action) for action in actions(board)]
+        res = [
+            None,
             max(minmax_value(board)[0] for board in children_boards),
         ]
 
