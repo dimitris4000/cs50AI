@@ -50,7 +50,21 @@ def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
-    raise NotImplementedError
+    new_board = [[EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]]
+    
+    for i,row in enumerate(new_board):
+        for j,cell in enumerate(row):
+            if (i,j) == action:
+                if board[i][j] is EMPTY:
+                    new_board[i][j] = player(board)
+                else:
+                    raise Exception("Invalid board action")
+            else:
+                new_board[i][j] = board[i][j]
+    
+    return new_board
 
 
 def winner(board):
