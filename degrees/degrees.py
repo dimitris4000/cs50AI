@@ -91,9 +91,38 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    frontier = QueueFrontier()
+    visited = StackFrontier()
 
-    # TODO
-    raise NotImplementedError
+    frontier.add(Node(source,None,None))
+    terminal_node = None
+    checks_counter = 0
+    while not frontier.empty():
+        # Pick node from the frontier
+        checking_node = frontier.remove()
+
+        # Skip visited nodes
+        if visited.contains_state(checking_node.state):
+            continue
+        else:
+            visited.add(checking_node)
+            checks_counter += 1
+
+        # Check if current node is terminal
+        checks_counter += 1
+        if checking_node.state == target:
+            terminal_node = checking_node
+            break
+
+        # Polulate frontier with neighbouring nodes
+        for (movie, neighbor) in neighbors_for_person(checking_node.state):
+            frontier.add(Node(neighbor,checking_node,movie))
+
+    print(f"Checked #{checks_counter} nodes.")
+    if terminal_node:
+        return [(x.action,x.state) for x in terminal_node.backtrack_nodes() if x.parent is not None]
+
+    return None
 
 
 def person_id_for_name(name):

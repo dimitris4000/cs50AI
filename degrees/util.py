@@ -4,6 +4,18 @@ class Node():
         self.parent = parent
         self.action = action
 
+    def backtrack_nodes(self) -> list["Node"]:
+        result = [self]
+        n = self
+        while n.parent is not None:
+            n = n.parent
+            result.append(n)
+        
+        return reversed(result)
+
+    def __str__(self):
+        return f"{self.parent}-({self.action})->{self.state}"
+
 
 class StackFrontier():
     def __init__(self):
