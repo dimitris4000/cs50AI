@@ -99,7 +99,15 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    raise NotImplementedError
+    # Check for winner
+    win = winner(board)
+    if win is not None: return True
+
+    # Check for empty cells
+    for row in board:
+        if any([cell is EMPTY for cell in row]): return False
+
+    return True # No empty cells, No winners
 
 
 def utility(board):
