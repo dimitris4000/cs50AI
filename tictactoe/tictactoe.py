@@ -42,7 +42,7 @@ def actions(board):
     for i,row in enumerate(board):
         for j,cell in enumerate(row):
             if cell is EMPTY: actions.append((i,j))
-    
+
     return actions
 
 
@@ -53,7 +53,7 @@ def result(board, action):
     new_board = [[EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY]]
-    
+
     for i,row in enumerate(new_board):
         for j,cell in enumerate(row):
             if (i,j) == action:
@@ -63,7 +63,7 @@ def result(board, action):
                     raise Exception("Invalid board action")
             else:
                 new_board[i][j] = board[i][j]
-    
+
     return new_board
 
 
@@ -71,7 +71,28 @@ def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
-    raise NotImplementedError
+    # Check horizontal
+    for i in range(3):
+        if board[i][0] is not EMPTY and
+            board[i][0] == board[i][1] and
+            board[i][0] == board[i][2]:
+            return board[i][0]
+
+    # Check vertical
+    for i in range(3):
+        if board[0][i] is not EMPTY and
+            board[0][i] == board[1][i] and
+            board[0][i] == board[2][i]:
+            return board[0][i]
+
+    # Check diagonal
+    for i in [0,2]:
+        if board[1][1] is not EMPTY and
+            board[1][1] == board[0][i] and
+            board[1][1] == board[2][2-i]:
+            return board[1][1]
+
+    return None # No winner
 
 
 def terminal(board):
