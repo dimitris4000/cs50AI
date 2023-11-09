@@ -7,6 +7,7 @@ import math
 X = "X"
 O = "O"
 EMPTY = None
+minmax_memoize = dict()
 
 
 def initial_state():
@@ -28,7 +29,7 @@ def player(board):
         for cell in row:
             if cell == X:
                 count_x += 1
-            else if cell == O:
+            elif cell == O:
                 count_o += 1
 
     return X if count_x == count_o else O
@@ -73,22 +74,22 @@ def winner(board):
     """
     # Check horizontal
     for i in range(3):
-        if board[i][0] is not EMPTY and
-            board[i][0] == board[i][1] and
+        if board[i][0] is not EMPTY and \
+            board[i][0] == board[i][1] and \
             board[i][0] == board[i][2]:
             return board[i][0]
 
     # Check vertical
     for i in range(3):
-        if board[0][i] is not EMPTY and
-            board[0][i] == board[1][i] and
+        if board[0][i] is not EMPTY and \
+            board[0][i] == board[1][i] and \
             board[0][i] == board[2][i]:
             return board[0][i]
 
     # Check diagonal
     for i in [0,2]:
-        if board[1][1] is not EMPTY and
-            board[1][1] == board[0][i] and
+        if board[1][1] is not EMPTY and \
+            board[1][1] == board[0][i] and \
             board[1][1] == board[2][2-i]:
             return board[1][1]
 
@@ -125,4 +126,16 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    if terminal(board): return None
+
+    # possible_actions = actions(board)
+    # if player(board) == X:
+    #     optimum_action = [-2, None]
+    #     for action in possible_actions:
+
+    # else:
+    #     optimum_action = [2, None]
+    #     for action in possible_actions:
+    #         pass
+
+    return actions(board)[0] # REMOVE/EDIT ME! Dummy code.
