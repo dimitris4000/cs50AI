@@ -161,3 +161,4 @@ cython_debug/
 
 # Exlude downloads from the course's website
 downloads/
+*/submission/
