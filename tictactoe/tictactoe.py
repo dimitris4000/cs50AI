@@ -128,14 +128,58 @@ def minimax(board):
     """
     if terminal(board): return None
 
-    # possible_actions = actions(board)
-    # if player(board) == X:
-    #     optimum_action = [-2, None]
-    #     for action in possible_actions:
+    possible_actions = actions(board)
+    if player(board) == X:
+        optimum_action = [-2, None]
+        for action in possible_actions:
+            action_value = minmax_value(result(board,action))
+            if optimum_action[0] < action_value[0]:
+                optimum_action = [action_value[0], action]
+    else:
+        optimum_action = [2, None]
+        for action in possible_actions:
+            action_value = minmax_value(result(board,action))
+            if optimum_action[0] > action_value[1]:
+                optimum_action = [action_value[1], action]
 
-    # else:
-    #     optimum_action = [2, None]
-    #     for action in possible_actions:
-    #         pass
+    return optimum_action[1]
 
-    return actions(board)[0] # REMOVE/EDIT ME! Dummy code.
+
+def minmax_value(board):
+    """
+    Returns a list with two values of the form [min_value, max_value] of
+    the given board.
+    """
+    hash = encode_board(board)
+    if hash in minmax_memoize:
+        return minmax_memoize[hash]
+
+    if terminal(board):
+        res = utility(board)
+        res = [res,res]
+    else:
+        children_boards = [result(board,action) for action in actions(board)]
+        res = [
+            min(minmax_value(board)[1] for board in children_boards),
+            max(minmax_value(board)[0] for board in children_boards),
+        ]
+
+    minmax_memoize[hash] = res
+    return res
+
+
+def encode_board(board):
+    """
+    Maps a complete board representation to an integer in a 1-1 way.
+    This function is meant to be used to hash the boards and memoize
+    their minmax values.
+    """
+    hash = 0
+    for row in board:
+        for cell in row:
+            hash = hash << 2
+            if cell == X:
+                hash += 1
+            elif cell == O:
+                hash += 2
+    return hash
