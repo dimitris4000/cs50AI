@@ -1,5 +1,6 @@
 import csv
 import sys
+import random
 
 from util import Node, StackFrontier, QueueFrontier
 
@@ -62,12 +63,16 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    source = person_id_for_name(input("Name: "))
-    if source is None:
-        sys.exit("Person not found.")
-    target = person_id_for_name(input("Name: "))
-    if target is None:
-        sys.exit("Person not found.")
+    # source = person_id_for_name(input("Name: "))
+    # if source is None:
+    #     sys.exit("Person not found.")
+    # target = person_id_for_name(input("Name: "))
+    # if target is None:
+    #     sys.exit("Person not found.")
+    source = pick_random_person()
+    target = pick_random_person()
+    print(f"Source person: {people[source]['name']}({source})")
+    print(f"Target person: {people[target]['name']}({target})")
 
     path = shortest_path(source, target)
 
@@ -150,6 +155,14 @@ def person_id_for_name(name):
     else:
         return person_ids[0]
 
+def pick_random_person() -> str:
+    """
+    Pick a random person from peoples list and return its id.
+    """
+    assert(people)
+
+    keys = list(people.keys())
+    return keys[random.randint(0, len(keys))]
 
 def neighbors_for_person(person_id):
     """
