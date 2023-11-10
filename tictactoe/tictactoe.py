@@ -133,19 +133,19 @@ def minimax(board):
         optimum_action = [-2, None]
         for action in possible_actions:
             action_value = min_value(result(board,action))
-            if optimum_action[0] < action_value[0]:
-                optimum_action = [action_value[0], action]
+            if optimum_action[0] < action_value:
+                optimum_action = [action_value, action]
     else:
         optimum_action = [2, None]
         for action in possible_actions:
             action_value = max_value(result(board,action))
-            if optimum_action[0] > action_value[1]:
-                optimum_action = [action_value[1], action]
+            if optimum_action[0] > action_value:
+                optimum_action = [action_value, action]
 
     return optimum_action[1]
 
 
-def min_value(board):
+def min_value(board, global_max=None):
     """
     Returns a list with two values of the form [min_value, max_value] of
     the given board.
@@ -156,19 +156,23 @@ def min_value(board):
 
     if terminal(board):
         res = utility(board)
-        res = [res,res]
     else:
         children_boards = [result(board,action) for action in actions(board)]
-        res = [
-            min(minmax_value(board)[1] for board in children_boards),
-            None,
-        ]
+        res = 2
+        for board in children_boards:
+            value = max_value(board, res)
+            if value < res:
+                res = value
+            if global_max is not None and res <= global_max: # Alpha-Beta pruning
+                return res
+
+        res = min(max_value(board) for board in children_boards)
 
     minmax_memoize[hash] = res
     return res
 
 
-def max_value(board):
+def max_value(board, global_min=None):
     """
     Returns a list with two values of the form [min_value, max_value] of
     the given board.
@@ -179,13 +183,15 @@ def max_value(board):
 
     if terminal(board):
         res = utility(board)
-        res = [res,res]
     else:
         children_boards = [result(board,action) for action in actions(board)]
-        res = [
-            None,
-            max(minmax_value(board)[0] for board in children_boards),
-        ]
+        res = -2
+        for board in children_boards:
+            value = min_value(board,res)
+            if value > res:
+                res = value
+            if global_min is not None and res >= global_min: # Alpha-Beta pruning
+                return res
 
     minmax_memoize[hash] = res
     return res
